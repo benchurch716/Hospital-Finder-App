@@ -17,11 +17,13 @@ import com.google.gson.JsonParser;
 
 @RestController
 public class HospitalController {
+	APIKey APIKey = new APIKey();
+
 	@GetMapping("/")
 	public List<Hospital> findNearestHospitals(@RequestParam String address) {
 		RestTemplate restTemplate = new RestTemplate();
-		String addressUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address
-				+ "&key=AIzaSyDpNMsb6YnGI1D0DfzIqoNKrBxe4mfptMg";
+		String addressUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key="
+				+ APIKey.getAPIKey();
 		ResponseEntity<String> response = restTemplate.getForEntity(addressUrl, String.class);
 		JsonObject responseObject = new JsonParser().parse(response.getBody()).getAsJsonObject();
 		if (responseObject.getAsJsonArray("results").size() == 0) {
