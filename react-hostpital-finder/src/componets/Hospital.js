@@ -1,7 +1,7 @@
 const Hospital = ({ hospital }) => {
   return (
-    <div>
-      <h3>{hospital.name}</h3>
+    <div className='hospital'>
+      <li className='hospital h3'>{hospital.name}</li>
       <p>{hospital.address}</p>
     </div>
   );
