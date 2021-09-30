@@ -17,8 +17,8 @@ const onSubmit = (e) => {
 
   return (
       <form className='form-control' onSubmit={onSubmit}>
-        <label className='form-control label'>Address:</label>
-        <input type="text" placeholder='Zip Code or City, State' value={searchText} onChange={(e) => setSearchText(e.target.value)}/>
+        <label className='form-control label'>Search Address:</label>
+        <input className='form-control input' type="text" placeholder='Zip Code or City, State' value={searchText} onChange={(e) => setSearchText(e.target.value)}/>
         <input className="btn" type="submit" value="Search" />
       </form>
   );
