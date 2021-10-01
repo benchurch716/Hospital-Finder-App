@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,13 +18,14 @@ import com.google.gson.JsonParser;
 
 @RestController
 public class HospitalController {
-	APIKey APIKey = new APIKey();
-
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/")
 	public List<Hospital> findNearestHospitals(@RequestParam String address) {
+		APIKey APIKey = new APIKey();
 		RestTemplate restTemplate = new RestTemplate();
 		String addressUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key="
 				+ APIKey.getAPIKey();
+
 		ResponseEntity<String> response = restTemplate.getForEntity(addressUrl, String.class);
 		JsonObject responseObject = new JsonParser().parse(response.getBody()).getAsJsonObject();
 		if (responseObject.getAsJsonArray("results").size() == 0) {
@@ -37,7 +39,8 @@ public class HospitalController {
 		String location = lat + ", " + lng;
 
 		String locationUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location
-				+ "&radius=15000&type=hospital&key=AIzaSyDpNMsb6YnGI1D0DfzIqoNKrBxe4mfptMg";
+				+ "&radius=15000&type=hospital&key=" + APIKey.getAPIKey();
+
 		response = restTemplate.getForEntity(locationUrl, String.class);
 		responseObject = new JsonParser().parse(response.getBody()).getAsJsonObject();
 
@@ -45,10 +48,12 @@ public class HospitalController {
 		for (int i = 0; i < 3; i++) {
 			JsonObject currentHospital = responseObject.getAsJsonArray("results").get(i).getAsJsonObject();
 			Hospital newHospital = new Hospital();
+			newHospital.setPlaceId(currentHospital.getAsJsonObject().get("place_id").getAsString());
 			newHospital.setName(currentHospital.getAsJsonObject().get("name").getAsString());
 			newHospital.setAddress(currentHospital.getAsJsonObject().get("vicinity").getAsString());
 			nearestHospitals.add(newHospital);
 		}
+		System.out.println(nearestHospitals);
 		return nearestHospitals;
 	}
 
