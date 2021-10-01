@@ -14,7 +14,6 @@ function App() {
   };
 
   const fetchHospitals = async (address) => {
-    console.log("http://localhost:8080/?address=" + address.searchText)
     const res = await fetch(
       "http://localhost:8080/?address=" + address.searchText
     );
